@@ -52,10 +52,15 @@ The script prints the generated zip path.
 
 ## GitHub Release Flow
 
-1. Run `Scripts/package_release.sh`.
-2. Create a GitHub repository and push this project.
-3. In GitHub, open `Releases`, create a new release, and upload `build/ReleasePackage/Squeeky-Clean-Mac.zip`.
-4. Tell users to download the zip, unzip it, move the app to `/Applications`, then right-click and open it once.
+Every push to `main` runs the GitHub Actions workflow, builds a release zip, and publishes it to the GitHub Releases page automatically.
+
+Release tags use this format:
+
+```text
+main-<github-run-number>-<short-commit-sha>
+```
+
+Users can download `Squeeky-Clean-Mac.zip` from the latest release, unzip it, move the app to `/Applications`, then right-click and open it once.
 
 ## License
 

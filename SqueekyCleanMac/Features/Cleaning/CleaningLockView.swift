@@ -5,17 +5,17 @@ struct CleaningLockView: View {
     @Namespace private var glassNamespace
 
     var body: some View {
-        ZStack {
+        return ZStack {
             AtmosphericBackdrop(isLocked: viewModel.isLocked)
 
-            GlassEffectContainer(spacing: 24) {
-                VStack(spacing: 24) {
+            GlassEffectContainer(spacing: viewModel.usesCompactPermissionLayout ? 18 : 24) {
+                VStack(spacing: viewModel.usesCompactPermissionLayout ? 18 : 24) {
                     header
                     lockOrb
                     statusPanel
                     footer
                 }
-                .padding(28)
+                .padding(viewModel.usesCompactPermissionLayout ? 24 : 28)
             }
         }
         .preferredColorScheme(.dark)
@@ -58,13 +58,13 @@ struct CleaningLockView: View {
         ZStack {
             Circle()
                 .stroke(.white.opacity(0.14), lineWidth: 1)
-                .frame(width: 204, height: 204)
+                .frame(width: orbOuterSize, height: orbOuterSize)
                 .glassEffect()
                 .glassEffectID("orb-outer", in: glassNamespace)
 
             Circle()
                 .fill(.white.opacity(viewModel.isLocked ? 0.16 : 0.08))
-                .frame(width: 190, height: 190)
+                .frame(width: orbGlowSize, height: orbGlowSize)
                 .blur(radius: 18)
 
             Circle()
@@ -77,15 +77,15 @@ struct CleaningLockView: View {
                     style: StrokeStyle(lineWidth: 5, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
-                .frame(width: 156, height: 156)
+                .frame(width: orbRingSize, height: orbRingSize)
                 .opacity(viewModel.isLocked ? 1 : 0.58)
                 .animation(.smooth(duration: 0.25), value: viewModel.unlockProgress)
 
             Image(systemName: viewModel.isLocked ? "lock.fill" : "keyboard")
-                .font(.system(size: 52, weight: .semibold, design: .rounded))
+                .font(.system(size: orbSymbolSize, weight: .semibold, design: .rounded))
                 .symbolEffect(.bounce, value: viewModel.isLocked)
                 .foregroundStyle(.white)
-                .frame(width: 128, height: 128)
+                .frame(width: orbIconSize, height: orbIconSize)
                 .glassEffect()
                 .glassEffectID("lock-orb", in: glassNamespace)
                 .shadow(color: .black.opacity(0.22), radius: 18, y: 14)
@@ -101,7 +101,28 @@ struct CleaningLockView: View {
                     .transition(.scale.combined(with: .opacity))
             }
         }
-        .frame(height: 212)
+        .frame(height: viewModel.usesCompactPermissionLayout ? 176 : 212)
+        .animation(.smooth(duration: 0.35), value: viewModel.usesCompactPermissionLayout)
+    }
+
+    private var orbOuterSize: CGFloat {
+        viewModel.usesCompactPermissionLayout ? 176 : 204
+    }
+
+    private var orbGlowSize: CGFloat {
+        viewModel.usesCompactPermissionLayout ? 164 : 190
+    }
+
+    private var orbRingSize: CGFloat {
+        viewModel.usesCompactPermissionLayout ? 136 : 156
+    }
+
+    private var orbIconSize: CGFloat {
+        viewModel.usesCompactPermissionLayout ? 108 : 128
+    }
+
+    private var orbSymbolSize: CGFloat {
+        viewModel.usesCompactPermissionLayout ? 44 : 52
     }
 
     private var statusPanel: some View {
@@ -118,25 +139,14 @@ struct CleaningLockView: View {
                 .foregroundStyle(.white.opacity(0.68))
                 .fixedSize(horizontal: false, vertical: true)
 
-            if !viewModel.isLocked && viewModel.permissionState.needsAttention {
+            if viewModel.usesCompactPermissionLayout {
                 permissionStrip
                     .padding(.top, 4)
                     .transition(.opacity.combined(with: .move(edge: .bottom)))
             }
-
-            if !viewModel.isLocked && viewModel.permissionState.needsAttention {
-                Button {
-                    viewModel.openSystemSettings()
-                } label: {
-                    Label(viewModel.permissionState.canLock ? "Review Permissions" : "Open Privacy Settings", systemImage: "switch.2")
-                }
-                .buttonStyle(.glass)
-                .controlSize(.large)
-                .padding(.top, 4)
-            }
         }
         .frame(maxWidth: .infinity)
-        .padding(18)
+        .padding(viewModel.usesCompactPermissionLayout ? 16 : 18)
         .glassEffect()
         .glassEffectID("status-panel", in: glassNamespace)
     }
@@ -235,5 +245,5 @@ private struct AtmosphericBackdrop: View {
 
 #Preview {
     CleaningLockView(viewModel: CleaningLockViewModel())
-        .frame(width: 420, height: 520)
+        .frame(width: 420, height: 548)
 }

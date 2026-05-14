@@ -76,12 +76,16 @@ final class CleaningLockViewModel: ObservableObject {
         case .ready:
             return "Start a quick cleaning session, wipe everything down, then unlock with both Command keys."
         case .readyWithInputMonitoringWarning:
-            return "Cleaning mode can start. Input Monitoring has not reported as enabled yet, so grant it too if macOS asks."
+            return "Cleaning mode can start. Input Monitoring has not reported as enabled yet."
         case .needsAccessibility:
-            return "macOS needs Accessibility permission before this app can filter input globally."
+            return "Enable Accessibility in Privacy & Security to start cleaning mode."
         case .needsAccessibilityAndInputMonitoring:
-            return "macOS needs Accessibility permission before cleaning mode can start. Input Monitoring may also be requested."
+            return "Enable Accessibility to start. Input Monitoring may also be requested."
         }
+    }
+
+    var usesCompactPermissionLayout: Bool {
+        !isLocked && permissionState.needsAttention
     }
 
     var permissionRows: [PermissionRowState] {

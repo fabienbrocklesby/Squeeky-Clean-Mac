@@ -15,14 +15,14 @@ struct SqueekyCleanMacApp: App {
     var body: some Scene {
         WindowGroup {
             CleaningLockView(viewModel: viewModel)
-                .frame(width: 420, height: 520)
+                .frame(width: 420, height: 548)
                 .onAppear {
                     appDelegate.configureWindow()
                 }
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
-        .defaultSize(width: 420, height: 520)
+        .defaultSize(width: 420, height: 548)
 
         MenuBarExtra("Squeeky Clean Mac", systemImage: viewModel.menuBarSystemImage) {
             MenuBarLockView(viewModel: viewModel)
