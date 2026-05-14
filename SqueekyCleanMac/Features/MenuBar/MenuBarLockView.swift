@@ -42,11 +42,11 @@ struct MenuBarLockView: View {
                 }
                 .buttonStyle(.glassProminent)
 
-                if !viewModel.permissionState.canLock {
+                if viewModel.permissionState.needsAttention {
                     Button {
                         viewModel.openSystemSettings()
                     } label: {
-                        Label("Open Privacy Settings", systemImage: "switch.2")
+                        Label(viewModel.permissionState.canLock ? "Review Permissions" : "Open Privacy Settings", systemImage: "switch.2")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.glass)

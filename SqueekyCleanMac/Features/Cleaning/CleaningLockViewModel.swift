@@ -168,7 +168,7 @@ final class CleaningLockViewModel: ObservableObject {
                     return
                 }
 
-                await self?.refreshPermissionState()
+                self?.refreshPermissionState()
             }
         }
     }
